@@ -1,18 +1,45 @@
+let selectedLanguage = 'english';
 document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('englishTab').addEventListener('click', function () {
+    selectedLanguage = 'english'
     fetchBooks('english');
   });
 
   document.getElementById('frenchTab').addEventListener('click', function () {
+    selectedLanguage = 'french'
     fetchBooks('french');
   });
 
   document.getElementById('russianTab').addEventListener('click', function () {
+    selectedLanguage = 'russian'
     fetchBooks('russian');
   });
 
-  fetchBooks('english');
+  fetchBooks(selectedLanguage);
 });
+function applySorting() {
+  const selectedLanguage = getSelectedLanguage();
+  const selectedSortOption = getSelectedSortOption();
+
+  fetch(`/books?language=${selectedLanguage}&sortBy=${selectedSortOption}`)
+      .then(response => response.json())
+      .then(books => {
+        updateTabContent(selectedLanguage, books);
+      })
+      .catch(error => {
+        console.error('Error fetching books:', error);
+      });
+}
+function getSelectedSortOption() {
+  const sortOptions = document.getElementById('sortOptions');
+  return sortOptions.options[sortOptions.selectedIndex].value;
+}
+
+function getSelectedLanguage() {
+  return selectedLanguage;
+}
+
+
 
 function fetchBooks(language) {
   fetch(`/books/${language}`)
@@ -91,4 +118,3 @@ function updateTabContent(language, books) {
 
   tabContent.style.display = 'block';
 }
-

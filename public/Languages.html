@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>//a
+<head>
   <meta charset="UTF-8">
   <title>Terra Languages</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-<!----------------------NAVBAR---------------------------------->
 <section>
   <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
     <div class="container-fluid">
-      <img class ="icon" src="icon.png" alt="terra">
+      <img class="icon" src="icon.png" alt="terra">
       <a class="navbar-brand" href="./index.html">Terra Education</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -33,16 +33,19 @@
 <section>
   <div class="container">
     <br>
-    <!-- FIlTER -->
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Search Books" id="filterInput">
-      <button class="btn btn-outline-secondary" type="button" onclick="filterBooks()">Filter</button>
-    </div>
-    <!-------------------------TABS------------------------>
     <div class="btn-group">
       <button type="button" class="btn btn-primary" id="englishTab">English</button>
       <button type="button" class="btn btn-primary" id="frenchTab">French</button>
       <button type="button" class="btn btn-primary" id="russianTab">Russian</button>
+    </div>
+
+    <!-- Sorting -->
+    <div class="input-group mt-3">
+      <select class="form-select" id="sortOptions">
+        <option value="asc">Sort A-Z</option>
+        <option value="desc">Sort Z-A</option>
+      </select>
+      <button class="btn btn-outline-secondary" type="button" onclick="applySorting()">Apply Sorting</button>
     </div>
 
     <!-- Tab Content -->
@@ -56,9 +59,9 @@
       <div id="russian" class="tab-pane fade">
       </div>
     </div>
-
   </div>
 </section>
 <script src="languagesScript.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1/dist/es-module-shims.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -139,7 +139,10 @@ app.get('/books/:language', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
+app.use('*.css', (req, res, next) => {
+    res.header('Content-Type', 'text/css');
+    next();
+});
 app.get('/books', async (req, res) => {
     try {
         const { language, sortBy, filterBy, page, limit } = req.query;
@@ -151,12 +154,15 @@ app.get('/books', async (req, res) => {
         }
 
         if (filterBy) {
-            // more filter criterias in the future
+            // more filter criteria in the future
         }
 
         const sortOrder = sortBy === 'desc' ? -1 : 1;
+
+        const sortField = 'title';
+
         const books = await Book.find(query)
-            .sort({ title: sortOrder })
+            .sort({ [sortField]: sortOrder })
             .skip((page - 1) * limit)
             .limit(parseInt(limit));
 
