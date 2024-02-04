@@ -7,8 +7,14 @@ const jwt = require('jsonwebtoken');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const corsOptions = {
+    origin: 'http://localhost:3000/',
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
-app.use(cors());
 
 mongoose.connect('mongodb://localhost:27017/backend', {
     useNewUrlParser: true,
@@ -39,14 +45,12 @@ const User = mongoose.model('User', userSchema);
 
 const { Schema, model } = mongoose;
 
-// Define the Book schema
 const bookSchema = new Schema({
     title: { type: String, required: true },
     author: { type: String },
     language: { type: String, required: true },
 });
 
-// Create the Book model
 const Book = model('Book', bookSchema);
 
 app.post('/register', async (req, res) => {
@@ -76,7 +80,7 @@ app.post('/login', async (req, res) => {
             expiresIn: '1min',
         });
 
-        res.cookie('authToken', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour expiration
+        res.cookie('authToken', token, { httpOnly: true, maxAge: 3600000 });
 
         res.status(200).json({ token, userId: user._id });
     } catch (error) {
@@ -109,12 +113,11 @@ const authenticateJWT = (req, res, next) => {
 app.get('/protected-route', authenticateJWT, (req, res) => {
     res.json({ message: 'Access granted' });
 });
-//FILTERING
-// Endpoint to add a book based on language
+
 app.post('/books/:language', async (req, res) => {
     try {
         const { title, author } = req.body;
-        const language = req.params.language.toLowerCase(); // Convert language to lowercase for consistency
+        const language = req.params.language.toLowerCase();
         const newBook = new Book({ title, author, language });
         await newBook.save();
 
@@ -124,12 +127,12 @@ app.post('/books/:language', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+app.use('/books', express.static('books'));
 
-// Endpoint to get all books based on language
 app.get('/books/:language', async (req, res) => {
     try {
         const language = req.params.language.toLowerCase();
-        const books = await Book.find({language }) ;  //+title and author
+        const books = await Book.find({language }) ;
         res.json(books);
     } catch (error) {
         console.error(error);
@@ -137,7 +140,6 @@ app.get('/books/:language', async (req, res) => {
     }
 });
 
-// Endpoint to get all books with sorting, filtering, and paging options
 app.get('/books', async (req, res) => {
     try {
         const { language, sortBy, filterBy, page, limit } = req.query;
@@ -149,13 +151,12 @@ app.get('/books', async (req, res) => {
         }
 
         if (filterBy) {
-            // Add additional filtering criteria based on your needs
-            // For example, filter by author: query.author = filterBy;
+            // more filter criterias in the future
         }
 
         const sortOrder = sortBy === 'desc' ? -1 : 1;
         const books = await Book.find(query)
-            .sort({ title: sortOrder }) // Sort by title by default
+            .sort({ title: sortOrder })
             .skip((page - 1) * limit)
             .limit(parseInt(limit));
 
@@ -165,7 +166,6 @@ app.get('/books', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-//FILTERING
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });

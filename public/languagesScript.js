@@ -1,31 +1,23 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-  let currentLanguage = 'english';
-
-  fetchBooks(currentLanguage);
-
   document.getElementById('englishTab').addEventListener('click', function () {
-    currentLanguage = 'english';
-    fetchBooks(currentLanguage);
+    fetchBooks('english');
   });
 
   document.getElementById('frenchTab').addEventListener('click', function () {
-    currentLanguage = 'french';
-    fetchBooks(currentLanguage);
+    fetchBooks('french');
   });
 
   document.getElementById('russianTab').addEventListener('click', function () {
-    currentLanguage = 'russian';
-    fetchBooks(currentLanguage);
+    fetchBooks('russian');
   });
+
+  fetchBooks('english');
 });
 
 function fetchBooks(language) {
-
   fetch(`/books/${language}`)
       .then(response => response.json())
       .then(books => {
-
         updateTabContent(language, books);
       })
       .catch(error => {
@@ -43,18 +35,60 @@ function updateTabContent(language, books) {
   tabContent.innerHTML = '';
 
   if (books.length > 0) {
-    const bookList = document.createElement('ul');
+    const cardContainer = document.createElement('div');
+    cardContainer.classList.add('card-container');
 
     books.forEach(book => {
-      const listItem = document.createElement('li');
-      listItem.textContent = book.title;
-      bookList.appendChild(listItem);
+      const card = document.createElement('div');
+      card.classList.add('card');
+
+      const image = document.createElement('img');
+      image.classList.add('card-img');
+      image.src = book.url;
+      image.alt = book.title;
+
+      const cardBody = document.createElement('div');
+      cardBody.classList.add('card-body');
+
+      const title = document.createElement('h5');
+      title.classList.add('card-title');
+      title.textContent = book.title;
+
+      const author = document.createElement('p');
+      author.classList.add('card-text');
+      author.textContent = `Author: ${book.author}`;
+
+      const level = document.createElement('p');
+      level.classList.add('card-text');
+      level.textContent = `Level: ${book.level}`;
+
+      const publisher = document.createElement('p');
+      publisher.classList.add('card-text');
+      publisher.textContent = `Publisher: ${book.publisher}`;
+
+      const link = document.createElement('a');
+      console.log(book.link);
+      link.href = book.link;
+      link.target = '_blank';
+      link.textContent = 'View PDF';
+
+      cardBody.appendChild(title);
+      cardBody.appendChild(author);
+      cardBody.appendChild(level);
+      cardBody.appendChild(publisher);
+      cardBody.appendChild(link);
+
+      card.appendChild(image);
+      card.appendChild(cardBody);
+
+      cardContainer.appendChild(card);
     });
 
-    tabContent.appendChild(bookList);
+    tabContent.appendChild(cardContainer);
   } else {
     tabContent.textContent = `No ${language.charAt(0).toUpperCase() + language.slice(1)} books available.`;
   }
 
   tabContent.style.display = 'block';
 }
+
