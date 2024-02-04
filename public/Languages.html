@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Terra Languages</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+<!----------------------NAVBAR---------------------------------->
+<section>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+    <div class="container-fluid">
+      <img class ="icon" src="icon.png" alt="terra">
+      <a class="navbar-brand" href="./index.html">Terra Education</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+          <a class="nav-link" href="./Languages.html">Languages</a>
+          <a class="nav-link" href="./Programs.html">Programs</a>
+          <a class="nav-link" href="./PlacementTest.html">Placement Test</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</section>
+<section>
+  <div class="container">
+    <br>
+    <!-- FIlTER -->
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Search Books" id="filterInput">
+      <button class="btn btn-outline-secondary" type="button" onclick="filterBooks()">Filter</button>
+    </div>
+    <!-------------------------TABS------------------------>
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" id="englishTab">English</button>
+      <button type="button" class="btn btn-primary" id="frenchTab">French</button>
+      <button type="button" class="btn btn-primary" id="russianTab">Russian</button>
+    </div>
+
+    <div class="tab-content">
+      <div id="english" class="tab-pane fade">
+      </div>
+
+      <div id="french" class="tab-pane fade">
+      </div>
+
+      <div id="russian" class="tab-pane fade">
+      </div>
+    </div>
+
+  </div>
+</section>
+<script src="languagesScript.js"></script>
+</body>
+</html>
