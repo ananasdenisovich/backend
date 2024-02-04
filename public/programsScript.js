@@ -6,7 +6,7 @@ function showLevelButtons(language) {
   document.querySelectorAll('.tab-pane').forEach(function (tab) {
     tab.classList.remove('active');
   });
-}
+}//a
 
 function showTab(level) {
   document.querySelectorAll('.tab-pane').forEach(function (tab) {
