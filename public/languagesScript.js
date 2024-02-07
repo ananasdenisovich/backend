@@ -38,11 +38,28 @@ function getSelectedSortOption() {
 function getSelectedLanguage() {
   return selectedLanguage;
 }
+function applyFilters() {
+  const selectedLanguage = getSelectedLanguage();
+  const selectedSortOption = getSelectedSortOption();
+  const selectedLevel = document.getElementById('levelFilter').value;
+  const selectedAuthor = document.getElementById('authorFilter').value;
+  const selectedPublisher = document.getElementById('publisherFilter').value;
+
+  fetch(`/books?language=${selectedLanguage}&sortBy=${selectedSortOption}&level=${selectedLevel}&author=${selectedAuthor}&publisher=${selectedPublisher}`)
+      .then(response => response.json())
+      .then(books => {
+        updateTabContent(selectedLanguage, books);
+      })
+      .catch(error => {
+        console.error('Error fetching books:', error);
+      });
+}
 
 
+function fetchBooks(language, level, author, publisher) {
+  const url = `/books/${language}?level=${level}&author=${author}&publisher=${publisher}`;
 
-function fetchBooks(language) {
-  fetch(`/books/${language}`)
+  fetch(url)
       .then(response => response.json())
       .then(books => {
         updateTabContent(language, books);
@@ -51,6 +68,8 @@ function fetchBooks(language) {
         console.error('Error fetching books:', error);
       });
 }
+
+
 
 function updateTabContent(language, books) {
   document.querySelectorAll('.tab-pane').forEach(tab => {

@@ -3,12 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Terra Languages</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
 <section>
@@ -47,6 +43,13 @@
       </select>
       <button class="btn btn-outline-secondary" type="button" onclick="applySorting()">Apply Sorting</button>
     </div>
+
+    <!-- Add these input fields to your HTML -->
+    <input type="text" id="levelFilter" placeholder="Filter by Level">
+    <input type="text" id="authorFilter" placeholder="Filter by Author">
+    <input type="text" id="publisherFilter" placeholder="Filter by Publisher">
+
+    <button type="button" onclick="applyFilters()">Apply Filters</button>
 
     <!-- Tab Content -->
     <div class="tab-content">

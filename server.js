@@ -49,6 +49,8 @@ const bookSchema = new Schema({
     title: { type: String, required: true },
     author: { type: String },
     language: { type: String, required: true },
+    level: { type: String },
+    publisher: { type: String },
 });
 
 const Book = model('Book', bookSchema);
@@ -116,9 +118,9 @@ app.get('/protected-route', authenticateJWT, (req, res) => {
 
 app.post('/books/:language', async (req, res) => {
     try {
-        const { title, author } = req.body;
+        const { title, author, level, publisher } = req.body;
         const language = req.params.language.toLowerCase();
-        const newBook = new Book({ title, author, language });
+        const newBook = new Book({ title, author, language, level, publisher });
         await newBook.save();
 
         res.status(201).json({ message: 'Book added successfully' });
@@ -127,6 +129,7 @@ app.post('/books/:language', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 app.use('/books', express.static('books'));
 
 app.get('/books/:language', async (req, res) => {
@@ -145,7 +148,7 @@ app.use('*.css', (req, res, next) => {
 });
 app.get('/books', async (req, res) => {
     try {
-        const { language, sortBy, filterBy, page, limit } = req.query;
+        const { language, sortBy, filterBy, page, limit, level, author, publisher } = req.query;
 
         let query = {};
 
@@ -153,16 +156,21 @@ app.get('/books', async (req, res) => {
             query.language = language.toLowerCase();
         }
 
-        if (filterBy) {
-            // more filter criteria in the future
+        if (level) {
+            query.level = level;
+        }
+
+        if (author) {
+            query.author = author;
+        }
+
+        if (publisher) {
+            query.publisher = publisher;
         }
 
         const sortOrder = sortBy === 'desc' ? -1 : 1;
-
-        const sortField = 'title';
-
         const books = await Book.find(query)
-            .sort({ [sortField]: sortOrder })
+            .sort({ title: sortOrder })
             .skip((page - 1) * limit)
             .limit(parseInt(limit));
 
@@ -172,6 +180,13 @@ app.get('/books', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+
+
+
+
+
