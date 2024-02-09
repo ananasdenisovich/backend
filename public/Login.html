@@ -1,23 +1,22 @@
+<!-- login.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>//a
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
 </head>
 <body>
-<div class="container">
-    <form id="loginForm">
-       <label for="username">Username:</label>
-       <input type="text" id="username" name="username" required>
+<form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <button type="button" onclick="login()">Login</button>
+</form>
 
-       <label for="password">Password:</label>
-       <input type="password" id="password" name="password" required>
-
-       <button type="button" onclick="login()">Login</button>
-    </form>
-</div>
 <script>
     async function login() {
         const username = document.getElementById('username').value;
@@ -32,17 +31,18 @@
                 body: JSON.stringify({ username, password }),
             });
 
+            const data = await response.json();
+
             if (response.ok) {
-                const data = await response.json();
-                alert(`Login successful! Token: ${data.token}`);
-                location.href = 'index.html';
+                localStorage.setItem('userId', data.userId);
+                localStorage.setItem('token', data.token);
+
+                window.location.href = 'programs.html';
             } else {
-                const data = await response.json();
-                alert(`Login failed: ${data.error}`);
+                alert(data.error);
             }
         } catch (error) {
-            console.error('Error during login:', error);
-            alert('Login failed. Please try again.');
+            console.error('Login error:', error);
         }
     }
 </script>
