@@ -238,6 +238,46 @@ app.post('/add-program/:userId/:programId', authenticateJWT, async (req, res) =>
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+app.post('/remove-program/:userId/:programId', authenticateJWT, async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const programId = req.params.programId;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (!user.programs.includes(programId)) {
+            return res.status(400).json({ error: 'Program not found in user\'s list' });
+        }
+
+        user.programs = user.programs.filter(p => p.toString() !== programId);
+        await user.save();
+
+        res.status(200).json({ success: true });
+    } catch (error) {
+        console.error('Error removing program:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+app.get('/user-programs/:userId', authenticateJWT, async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const user = await User.findById(userId).populate('programs');
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({ userPrograms: user.programs });
+    } catch (error) {
+        console.error('Error fetching user programs:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
