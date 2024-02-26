@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terra Languages</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+<section>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+        <div class="container-fluid">
+            <img class="icon" src="icon.png" alt="terra">
+            <a class="navbar-brand" href="./index.html">Terra Education</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                    <a class="nav-link" href="./Languages.html">Languages</a>
+                    <a class="nav-link" href="./Programs.html">Programs</a>
+                    <a class="nav-link" href="./PlacementTest.html">Placement Test</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</section>
+<section>
+    <div class="container">
+        <br>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="englishTab">English</button>
+            <button type="button" class="btn btn-primary" id="frenchTab">French</button>
+            <button type="button" class="btn btn-primary" id="russianTab">Russian</button>
+        </div>
+
+        <!-- Sorting -->
+        <div class="input-group mt-3">
+            <select class="form-select" id="sortOptions">
+                <option value="asc">Sort A-Z</option>
+                <option value="desc">Sort Z-A</option>
+            </select>
+            <button class="btn btn-outline-secondary" type="button" onclick="applySorting()">Apply Sorting</button>
+        </div>
+
+        <!-- Filter -->
+        <select id="levelFilter">
+            <option value="">Select Level</option>
+            <option value="A1">A1</option>
+            <option value="A2">A2</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+            <option value="C1">C1</option>
+            <option value="C2">C2</option>
+        </select>
+
+
+
+        <select id="authorFilter">
+            <option value="">Select Author</option>
+            <option value="Claire Miquel">Claire Miquel</option>
+            <option value="Jacky Girardet">Jacky Girardet</option>
+            <option value="Л.И. Москвитина">Л.И. Москвитина</option>
+            <option value="Marie-Pierre Caquineau-Gunduz">Marie-Pierre Caquineau-Gunduz</option>
+            <option value="Tamzin Thompson">Tamzin Thompson</option>
+            <option value="Татьяна Эсмантова">Татьяна Эсмантова</option>
+            <option value="В.И. Иванова">В.И. Иванова</option>
+        </select>
+
+        <select id="publisherFilter">
+            <option value="">Select Publisher</option>
+            <option value="CLE International">CLE International</option>
+            <option value="Hachette">Hachette</option>
+            <option value="Oxford University Press">Oxford University Press</option>
+            <option value="Routledge">Routledge</option>
+            <option value="ТулГУ">ТулГУ</option>
+            <option value="Златоуст">Златоуст</option>
+        </select>
+        <button type="button" onclick="applyFilters()">Apply Filters</button>
+
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <div id="english" class="tab-pane fade">
+            </div>
+
+            <div id="french" class="tab-pane fade">
+            </div>
+
+            <div id="russian" class="tab-pane fade">
+            </div>
+        </div>
+    </div>
+</section>
+<script src="languagesScript.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/es-module-shims@1/dist/es-module-shims.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
