@@ -1,26 +1,71 @@
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
     const testContainer = document.getElementById('test-container');
     const testForm = document.getElementById('test-form');
+    async function addProgramToUser(userId, programId) {
+        try {
+            const response = await fetch(`http://localhost:3000/add-program/${userId}/${programId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, 
+                },
+            });
 
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Program added successfully!');
+            } else {
+                console.error('Failed to add program:', data.error);
+            }
+        } catch (error) {
+            console.error('Error adding program:', error);
+        }
+    }
     async function startTest(language) {
-        const { questions, correctAnswers } = await fetchTestQuestions(language);
-        displayTestQuestions(questions);
+        try {
+            const { questions, correctAnswers } = await fetchTestQuestions(language);
 
-        return correctAnswers;
+            console.log('Fetched Questions:', questions);
+            console.log('Correct Answers:', correctAnswers);
+
+            if (!questions || !correctAnswers) {
+                console.error('Error: Questions or correctAnswers are undefined.');
+                return;
+            }
+
+            displayTestQuestions(questions);
+
+            return { questions, correctAnswers };
+        } catch (error) {
+            console.error('Error starting test:', error);
+        }
     }
 
-    function calculateScore(userAnswers, correctAnswers) {
-        let score = 0;
+    async function addProgram(userId, programId) {
+        try {
+            const response = await fetch(`http://localhost:3000/add-program/${userId}/${programId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, 
+                },
+            });
 
-        for (let i = 0; i < userAnswers.length; i++) {
-            if (userAnswers[i] === correctAnswers[i]) {
-                score++;
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Program added successfully!');
+            } else {
+                console.error('Failed to add program:', data.error);
             }
+        } catch (error) {
+            console.error('Error adding program:', error);
         }
-
-        return score;
     }
     async function fetchTestQuestions(language) {
         const response = await fetch(`http://localhost:3000/getTestQuestions/${language}`, {
@@ -29,23 +74,40 @@ document.addEventListener('DOMContentLoaded', function () {
             },
         });
 
+        console.log('Test Questions Response:', response);
+
+        if (!response.ok) {
+            console.error('Error fetching test questions:', response.statusText);
+            return { questions: [], correctAnswers: [] };
+        }
+
         const { questions, correctAnswers } = await response.json();
+        console.log('Fetched Questions:', questions);
+        console.log('Correct Answers:', correctAnswers);
+
         return { questions, correctAnswers };
     }
-    function gatherUserAnswers() {
-        const userAnswers = {};
 
-        const questionElements = document.querySelectorAll('input[type="radio"]:checked');
+    function gatherUserAnswers(correctAnswers) {
+        let score = 0;
 
-        questionElements.forEach((element) => {
-            const questionName = element.name;
-            const answerValue = element.value;
+        document.querySelectorAll('input[type="radio"]:checked').forEach((input) => {
+            const answerIndex = parseInt(input.value);
 
-            userAnswers[questionName] = answerValue;
+            if (!isNaN(answerIndex) && correctAnswers.includes(answerIndex.toString())) {
+                score++;
+            }
         });
 
-        return userAnswers;
+        console.log('Selected Answers:', document.querySelectorAll('input[type="radio"]:checked'));
+        console.log('Score:', score);
+
+        return score;
     }
+
+
+
+
     function displayTestQuestions(questions) {
         testForm.innerHTML = '';
 
@@ -66,8 +128,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const optionInput = document.createElement('input');
                 optionInput.classList.add('form-check-input');
                 optionInput.type = 'radio';
+                optionInput.name = `question${index}`; 
+                optionInput.classList.add('form-check-input');
+                optionInput.type = 'radio';
                 optionInput.name = `question${index}`;
-                optionInput.value = optionIndex;
+                optionInput.value = option;
 
                 const optionText = document.createElement('span');
                 optionText.classList.add('form-check-label');
@@ -85,21 +150,40 @@ document.addEventListener('DOMContentLoaded', function () {
         testContainer.style.display = 'block';
     }
 
-    document.getElementById('englishButton').addEventListener('click', () => {
-        startTest('english');
+
+    document.getElementById('englishButton').addEventListener('click', async () => {
+        const { correctAnswers } = await startTest('english');
+        console.log('Starting English Test...');
+        console.log('Correct Answers:', correctAnswers);
+
     });
 
+
+
     window.submitTest = async function () {
-        const userAnswers = gatherUserAnswers();
-        const correctAnswers = await startTest('english');
-        const score = calculateScore(userAnswers, correctAnswers);
-
-
-        const token = localStorage.getItem('token');
-        const language = 'english';
-        const requestBody = { language, score };
-
         try {
+            const { questions, correctAnswers } = await startTest('english');
+            const score = gatherUserAnswers(correctAnswers);
+            let programId;
+            const userId = localStorage.getItem('userId');
+            if (score >= 0 && score <= 5) {
+                programId = "65c3aa1c0266c5a5732b851a";
+            } else if (score >= 6 && score <= 8) {
+                programId = "65c3aa1c0266c5a5732b851b";
+            } else if (score >= 9 && score <= 10) {
+                programId = "65c3aa1c0266c5a5732b851c";
+            }
+
+            addProgram(userId, programId);
+
+            console.log('Final Score:', score);
+            console.log('Correct Answers:', correctAnswers);
+
+
+            const token = localStorage.getItem('token');
+            const language = 'english';
+            const requestBody = { language, score };
+
             const response = await fetch(`http://localhost:3000/saveTestScores/${userId}`, {
                 method: 'POST',
                 headers: {
@@ -113,11 +197,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (data.success) {
                 console.log('Test scores saved successfully!');
+
+                await addProgram(userId, score);
             } else {
                 console.error('Failed to save test scores:', data.error);
             }
         } catch (error) {
-            console.error('Error saving test scores:', error);
+            console.error('Error during the test:', error);
         }
     };
+
 });
