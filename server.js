@@ -23,7 +23,7 @@ async function initializeFetch() {
     const PORT = process.env.PORT || 3000;
 
     const corsOptions = {
-        origin: '*',
+        origin: 'http://localhost:3000',
         credentials: true,
     };
 
@@ -45,8 +45,8 @@ async function initializeFetch() {
         console.log('Connected to MongoDB');
     });
 
-    const jwtSecret = process.env.JWT_SECRET || 'your-secret-key';
-    const tokenExpiration = '1h';
+    const jwtSecret = process.env.JWT_SECRET || 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNzQ3NDM3MywiaWF0IjoxNzA3NDc0MzczfQ.LwUTjSy2Z8jGYtYPatJraX2vD9-obq1uOmMW52gvDd8';
+const tokenExpiration = '1h';
 
     app.use(express.static(path.join(__dirname, 'public')));
 
